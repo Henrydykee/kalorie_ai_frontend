@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+// App.jsx
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import GenderSelect from './onboarding/select_gender';
+import WorkoutDurationScreen from './onboarding/WorkoutDurationScreen';
+import HeightWeightScreen from './onboarding/HeightWeightScreen';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f5f5f5', // Optional: adds light background
+      }}
+    >
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<GenderSelect />} />
+          <Route
+            path="/WorkoutDurationScreen"
+            element={<WorkoutDurationScreen />}
+          />
+           <Route
+            path="/HeightWeightScreen"
+            element={<HeightWeightScreen />}
+          />
+
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
 
 export default App;
+
