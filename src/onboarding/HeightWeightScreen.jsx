@@ -280,7 +280,7 @@ const HeightWeightScreen = () => {
   }, [selectedWeight, weights]);
 
   const handleNext = () => {
-    navigate('/next', { state: { height: selectedHeight, weight: selectedWeight } });
+    navigate('/DateOfBirthScreen', { state: { height: selectedHeight, weight: selectedWeight } });
   };
 
   return (
