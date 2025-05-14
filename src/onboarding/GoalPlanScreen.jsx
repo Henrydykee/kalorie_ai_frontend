@@ -112,7 +112,7 @@ const GoalPlanScreen = () => {
   const handleNext = () => {
     if (goal) {
       // Navigate to next screen, passing gender in state
-      navigate('/', { state: { goal } });
+      navigate('/DesiredWeightScreen', { state: { goal } });
     }
   };
 

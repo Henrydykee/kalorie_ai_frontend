@@ -5,6 +5,9 @@ import WorkoutDurationScreen from './onboarding/WorkoutDurationScreen';
 import HeightWeightScreen from './onboarding/HeightWeightScreen';
 import DateOfBirthScreen from './onboarding/DateOfBirthScreen';
 import GoalPlanScreen from './onboarding/GoalPlanScreen';
+import DesiredWeightScreen from './onboarding/DesiredWeightScreen';
+import WeightLossSpeedScreen from './onboarding/WeightLossSpeedScreen';
+import ComparisonScreen from './onboarding/ComparisonScreen';
 
 
 function App() {
@@ -25,6 +28,9 @@ function App() {
           <Route path="/HeightWeightScreen" element={<HeightWeightScreen />} />
           <Route path="/DateOfBirthScreen" element={<DateOfBirthScreen />} />
           <Route path="/GoalPlanScreen" element={<GoalPlanScreen />} />
+          <Route path="/DesiredWeightScreen" element={<DesiredWeightScreen />} />
+          <Route path="/WeightLossSpeedScreen" element={<WeightLossSpeedScreen />} />
+          <Route path="/ComparisonScreen" element={<ComparisonScreen />} />
         </Routes>
       </BrowserRouter>
     </div>
