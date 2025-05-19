@@ -12,6 +12,7 @@ import ProblemsScreen from './onboarding/ProblemsScreen';
 import DietScreen from './onboarding/DietScreen';
 import AccomplishmentScreen from './onboarding/AccomplishmentScreen';
 import GreatPotentialScreen from './onboarding/GreatPotentialScreen';
+import NameEmailScreen from './onboarding/NameAndEmailScreen';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path="/DietScreen" element={<DietScreen />} />
           <Route path="/AccomplishmentScreen" element={<AccomplishmentScreen />} />
            <Route path="/GreatPotentialScreen" element={<GreatPotentialScreen />} />
+          <Route path="/NameEmailScreen" element={<NameEmailScreen />} />
         </Routes>
       </BrowserRouter>
     </div>

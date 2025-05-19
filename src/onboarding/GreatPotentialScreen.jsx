@@ -124,7 +124,7 @@ const GreatPotentialScreen = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    //navigate('/ProblemsScreen');
+    navigate('/NameEmailScreen');
   };
 
   return (
