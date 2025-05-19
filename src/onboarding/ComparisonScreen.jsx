@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+// Import the image
+import graphImage from './graph.png';
 
 const MobileContainer = styled.div`
   width: 375px;
@@ -90,51 +92,12 @@ const ComparisonContainer = styled.div`
   margin-bottom: 24px;
 `;
 
-const ComparisonChartContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  padding: 20px 0;
-  margin-bottom: 40px;
-`;
-
-const ChartColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 130px;
-`;
-
-const ChartLabel = styled.div`
-  background: #fff;
-  border-radius: 20px;
-  padding: 12px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
+const GraphImage = styled.img`
   width: 100%;
   margin-bottom: 20px;
 `;
 
-const ChartBar = styled.div`
-  width: 100%;
-  height: ${props => props.height || 50}px;
-  background: ${props => props.background || '#ddd'};
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-`;
 
-const ComparisonText = styled.p`
-  font-size: 18px;
-  color: #555;
-  text-align: center;
-  margin: 0;
-`;
 
 const Footer = styled.div`
   padding: 24px;
@@ -161,7 +124,7 @@ const ComparisonScreen = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    navigate('/next-screen');
+    navigate('/ProblemsScreen');
   };
 
   return (
@@ -182,23 +145,10 @@ const ComparisonScreen = () => {
       <Content>
         <Title>Lose twice as much weight with KalorieAi vs on your own</Title>
 
-        <ComparisonContainer>
-          <ComparisonChartContainer>
-            <ChartColumn>
-              <ChartLabel>Without this app</ChartLabel>
-              <ChartBar height={80} background="#E0E0E0">20%</ChartBar>
-            </ChartColumn>
-            
-            <ChartColumn>
-              <ChartLabel>With this app</ChartLabel>
-              <ChartBar height={200} background="#333333">60%</ChartBar>
-            </ChartColumn>
-          </ComparisonChartContainer>
-          
-          <ComparisonText>
-            KalorieAi makes it easy and holds you accountable.
-          </ComparisonText>
-        </ComparisonContainer>
+
+        <GraphImage src={graphImage} alt="Weight loss comparison graph" />
+
+
       </Content>
 
       <Footer>

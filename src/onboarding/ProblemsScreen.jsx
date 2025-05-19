@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import UEHIcon from './assets/UEH.svg';
+import LOSIcon from './assets/LOS.svg';
+import BSIcon from './assets/BS.svg';
+import LOMIIcon from './assets/LOMI.svg';
 
 const MobileContainer = styled.div`
   width: 375px;
@@ -13,7 +17,6 @@ const MobileContainer = styled.div`
   background: #fff;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
 `;
 
 const Header = styled.div`
@@ -24,17 +27,11 @@ const Header = styled.div`
 `;
 
 const BackButton = styled.button`
-  background: #4CAF50;
+  background: #fff;
   border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
   font-size: 18px;
   cursor: pointer;
+  color: #4CAF50;
 `;
 
 const ProgressBar = styled.div`
@@ -67,55 +64,53 @@ const LangToggle = styled.div`
 const Content = styled.div`
   flex: 1;
   padding: 0 24px;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Title = styled.h1`
-  font-size: 28px;
+  font-size: 24px;
   margin-top: 32px;
   margin-bottom: 8px;
   color: #000;
-  text-align: center;
-  font-weight: bold;
 `;
 
 const Subtitle = styled.p`
   font-size: 16px;
   color: #555;
   margin-bottom: 24px;
-  text-align: center;
 `;
 
-const DateInputContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-`;
-
-const DateInput = styled.input`
-  padding: 12px 16px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+const Option = styled.button`
   width: 100%;
-  max-width: 280px;
-  text-align: center;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 2px solid;
+  border-color: ${props => (props.selected ? '#CFF7E4' : '#F0F0F5')};
+  background: ${props => (props.selected ? '#F5FFF7' : '#FAFBFF')};
+  border-radius: 12px;
+  font-size: 16px;
+  color: ${props => (props.selected ? '#000' : '#333')};
   cursor: pointer;
-  transition: border-color 0.2s;
-
-  &:focus {
-    border-color: #4CAF50;
-    outline: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  
+  &:hover {
+    transform: translateX(8px);
   }
+`;
+
+const IconWrapper = styled.span`
+  margin-right: 12px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Footer = styled.div`
   padding: 24px;
-  border-top: 1px solid #eee;
-  position: sticky;
-  bottom: 0;
-  background: white;
 `;
 
 const NextButton = styled.button`
@@ -130,52 +125,75 @@ const NextButton = styled.button`
   transition: background 0.2s;
 `;
 
-const DateOfBirthScreen = () => {
-  const [selectedDate, setSelectedDate] = useState('');
+const ProblemsScreen = () => {
+  const [diet, setProblem] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setSelectedDate(e.target.value);
-  };
+  const problemOptions = [
+    { 
+      text: 'Lack of consistency', 
+      iconPath: UEHIcon 
+    },
+    { 
+      text: 'Unhealthy eating habits', 
+      iconPath: UEHIcon
+    },
+    { 
+      text: 'Lack of support', 
+      iconPath: LOSIcon
+    },
+    { 
+      text: 'Busy schedule', 
+      iconPath: BSIcon
+    },
+    { 
+      text: 'Lack of meal inspiration', 
+      iconPath: LOMIIcon
+    }
+  ];
 
   const handleNext = () => {
-    if (selectedDate) {
-      const [year, month, day] = selectedDate.split('-').map(Number);
-      navigate('/GoalPlanScreen', { state: { day, month, year } });
+    if (diet) {
+      // Navigate to next screen, passing problem in state
+      navigate('/DietScreen', { state: { problem: diet } });
     }
   };
 
   return (
     <MobileContainer>
       <Header>
-        <BackButton onClick={() => navigate(-1)}>
-          <FaArrowLeft />
-        </BackButton>
+        <BackButton onClick={() => navigate(-1)}><FaArrowLeft /></BackButton>
         <ProgressBar>
-          <Progress percent={40} />
+          <Progress percent={20} />
         </ProgressBar>
         <LangToggle>
           <img src="https://flagcdn.com/gb.svg" alt="EN" width={16} style={{ marginRight: 6 }} />
           EN
         </LangToggle>
       </Header>
-
       <Content>
-        <Title>Date of Birth</Title>
-        <Subtitle>Select your birthdate to continue.</Subtitle>
+        <Title>What's stopping you from reaching your goals?</Title>
 
-        <DateInputContainer>
-          <DateInput
-            type="date"
-            value={selectedDate}
-            onChange={handleChange}
-            max={new Date().toISOString().split('T')[0]}
-          />
-        </DateInputContainer>
+        {problemOptions.map(option => (
+          <Option
+            key={option.text}
+            selected={diet === option.text}
+            onClick={() => setProblem(option.text)}
+          >
+            <IconWrapper>
+              <img 
+                src={option.iconPath} 
+                alt={option.text}
+                width={24}
+                height={24}
+              />
+            </IconWrapper>
+            {option.text}
+          </Option>
+        ))}
       </Content>
-
       <Footer>
-        <NextButton onClick={handleNext} disabled={!selectedDate}>
+        <NextButton disabled={!diet} onClick={handleNext}>
           Next
         </NextButton>
       </Footer>
@@ -183,4 +201,4 @@ const DateOfBirthScreen = () => {
   );
 };
 
-export default DateOfBirthScreen;
+export default ProblemsScreen;

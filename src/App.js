@@ -8,6 +8,8 @@ import GoalPlanScreen from './onboarding/GoalPlanScreen';
 import DesiredWeightScreen from './onboarding/DesiredWeightScreen';
 import WeightLossSpeedScreen from './onboarding/WeightLossSpeedScreen';
 import ComparisonScreen from './onboarding/ComparisonScreen';
+import ProblemsScreen from './onboarding/ProblemsScreen';
+import DietScreen from './onboarding/DietScreen';
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
           <Route path="/DesiredWeightScreen" element={<DesiredWeightScreen />} />
           <Route path="/WeightLossSpeedScreen" element={<WeightLossSpeedScreen />} />
           <Route path="/ComparisonScreen" element={<ComparisonScreen />} />
+          <Route path="/ProblemsScreen" element={<ProblemsScreen />} />
+          <Route path="/DietScreen" element={<DietScreen />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -87,82 +87,31 @@ const Subtitle = styled.p`
   text-align: center;
 `;
 
-const MeasurementsContainer = styled.div`
-  background: #FAFBFF;
-  border-radius: 16px;
-  padding: 24px 16px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+const FieldContainer = styled.div`
   margin-bottom: 24px;
-`;
-
-const Column = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
 `;
 
-const ColumnTitle = styled.h2`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 16px;
+const Label = styled.label`
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
 `;
 
-const SelectorContainer = styled.div`
-  height: 250px;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const SelectedValueIndicator = styled.div`
-  position: absolute;
-  height: 50px;
-  width: 80%;
-  background: #F0F0F5;
+const Input = styled.input`
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-`;
-
-const ScrollableValues = styled.div`
-  height: 100%;
   width: 100%;
-  overflow-y: scroll;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 100px 0;
-  scroll-snap-type: y mandatory;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-  
-  &::-webkit-scrollbar {
-    display: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #4CAF50;
+    outline: none;
   }
-`;
-
-const ValueItem = styled.div`
-  height: 50px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${props => props.selected ? '18px' : '16px'};
-  color: ${props => props.selected ? '#000' : '#aaa'};
-  font-weight: ${props => props.selected ? '600' : '400'};
-  transition: all 0.2s;
-  scroll-snap-align: center;
-  margin: 4px 0;
 `;
 
 const Footer = styled.div`
@@ -186,102 +135,31 @@ const NextButton = styled.button`
 `;
 
 const HeightWeightScreen = () => {
-  const [selectedHeight, setSelectedHeight] = useState(167);
-  const [selectedWeight, setSelectedWeight] = useState(54);
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
   const navigate = useNavigate();
-  
-  const heightScrollRef = useRef(null);
-  const weightScrollRef = useRef(null);
-  
-  // Generate height values from 150cm to 200cm
-  const heights = Array.from({ length: 51 }, (_, i) => (150 + i));
-  
-  // Generate weight values from 40kg to 120kg
-  const weights = Array.from({ length: 81 }, (_, i) => (40 + i));
 
-  // Handle scrolling and selection for height
-  useEffect(() => {
-    const heightScroller = heightScrollRef.current;
-    if (!heightScroller) return;
-    
-    const scrollToSelectedHeight = () => {
-      const index = heights.indexOf(selectedHeight);
-      if (index !== -1) {
-        const itemHeight = 58; // Height of each item (50px + 8px margin)
-        const scrollTop = index * itemHeight;
-        heightScroller.scrollTop = scrollTop;
-      }
-    };
-    
-    scrollToSelectedHeight();
-    
-    const handleHeightScroll = () => {
-      const scrollTop = heightScroller.scrollTop;
-      const itemHeight = 58; // 50px height + 8px margin
-      const index = Math.round(scrollTop / itemHeight);
-      
-      if (heights[index] !== selectedHeight) {
-        setSelectedHeight(heights[index] || selectedHeight);
-      }
-    };
-    
-    const debounce = (fn, delay) => {
-      let timeoutId;
-      return function(...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn.apply(this, args), delay);
-      };
-    };
-    
-    const debouncedScroll = debounce(handleHeightScroll, 50);
-    
-    heightScroller.addEventListener('scroll', debouncedScroll);
-    return () => heightScroller.removeEventListener('scroll', debouncedScroll);
-  }, [selectedHeight, heights]);
-  
-  // Handle scrolling and selection for weight
-  useEffect(() => {
-    const weightScroller = weightScrollRef.current;
-    if (!weightScroller) return;
-    
-    const scrollToSelectedWeight = () => {
-      const index = weights.indexOf(selectedWeight);
-      if (index !== -1) {
-        const itemHeight = 58; // Height of each item (50px + 8px margin)
-        const scrollTop = index * itemHeight;
-        weightScroller.scrollTop = scrollTop;
-      }
-    };
-    
-    scrollToSelectedWeight();
-    
-    const handleWeightScroll = () => {
-      const scrollTop = weightScroller.scrollTop;
-      const itemHeight = 58; // 50px height + 8px margin
-      const index = Math.round(scrollTop / itemHeight);
-      
-      if (weights[index] !== selectedWeight) {
-        setSelectedWeight(weights[index] || selectedWeight);
-      }
-    };
-    
-    const debounce = (fn, delay) => {
-      let timeoutId;
-      return function(...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn.apply(this, args), delay);
-      };
-    };
-    
-    const debouncedScroll = debounce(handleWeightScroll, 50);
-    
-    weightScroller.addEventListener('scroll', debouncedScroll);
-    return () => weightScroller.removeEventListener('scroll', debouncedScroll);
-  }, [selectedWeight, weights]);
+  // Ensure only integers
+  const handleHeightChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setHeight(value);
+    }
+  };
+
+  const handleWeightChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setWeight(value);
+    }
+  };
 
   const handleNext = () => {
-    navigate('/DateOfBirthScreen', { state: { height: selectedHeight, weight: selectedWeight } });
+    if (!height || !weight) return;
+    navigate('/DateOfBirthScreen', { state: { height: parseInt(height, 10), weight: parseInt(weight, 10) } });
   };
+
+  const isDisabled = !height || !weight;
 
   return (
     <MobileContainer>
@@ -289,62 +167,39 @@ const HeightWeightScreen = () => {
         <BackButton onClick={() => navigate(-1)}><FaArrowLeft /></BackButton>
         <ProgressBar><Progress percent={20} /></ProgressBar>
         <LangToggle>
-          <img src="https://flagcdn.com/gb.svg" alt="EN" width={16} style={{ marginRight: 6 }} />
-          EN
+          <img src="https://flagcdn.com/gb.svg" alt="EN" width={16} style={{ marginRight: 6 }} />EN
         </LangToggle>
       </Header>
+
       <Content>
         <Title>Height & weight</Title>
         <Subtitle>We will calibrate your custom plan.</Subtitle>
-        
-        <MeasurementsContainer>
-          <Column>
-            <ColumnTitle>Height</ColumnTitle>
-            <SelectorContainer>
-              <SelectedValueIndicator />
-              <ScrollableValues ref={heightScrollRef}>
-                {heights.map(height => (
-                  <ValueItem 
-                    key={`height-${height}`} 
-                    selected={height === selectedHeight}
-                    onClick={() => {
-                      setSelectedHeight(height);
-                      const index = heights.indexOf(height);
-                      heightScrollRef.current.scrollTop = index * 58;
-                    }}
-                  >
-                    {height} cm
-                  </ValueItem>
-                ))}
-              </ScrollableValues>
-            </SelectorContainer>
-          </Column>
-          
-          <Column>
-            <ColumnTitle>Weight</ColumnTitle>
-            <SelectorContainer>
-              <SelectedValueIndicator />
-              <ScrollableValues ref={weightScrollRef}>
-                {weights.map(weight => (
-                  <ValueItem 
-                    key={`weight-${weight}`} 
-                    selected={weight === selectedWeight}
-                    onClick={() => {
-                      setSelectedWeight(weight);
-                      const index = weights.indexOf(weight);
-                      weightScrollRef.current.scrollTop = index * 58;
-                    }}
-                  >
-                    {weight} kg
-                  </ValueItem>
-                ))}
-              </ScrollableValues>
-            </SelectorContainer>
-          </Column>
-        </MeasurementsContainer>
+
+        <FieldContainer>
+          <Label htmlFor="height-input">Height (cm)</Label>
+          <Input
+            id="height-input"
+            type="text"
+            placeholder="Enter height in cm"
+            value={height}
+            onChange={handleHeightChange}
+          />
+        </FieldContainer>
+
+        <FieldContainer>
+          <Label htmlFor="weight-input">Weight (kg)</Label>
+          <Input
+            id="weight-input"
+            type="text"
+            placeholder="Enter weight in kg"
+            value={weight}
+            onChange={handleWeightChange}
+          />
+        </FieldContainer>
       </Content>
+
       <Footer>
-        <NextButton onClick={handleNext}>Next</NextButton>
+        <NextButton onClick={handleNext} disabled={isDisabled}>Next</NextButton>
       </Footer>
     </MobileContainer>
   );

@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 const MobileContainer = styled.div`
   width: 375px;
@@ -80,13 +82,6 @@ const Title = styled.h1`
   font-weight: bold;
 `;
 
-const Subtitle = styled.p`
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 24px;
-  text-align: center;
-`;
-
 const WeightSelectorContainer = styled.div`
   background: #FAFBFF;
   border-radius: 16px;
@@ -118,7 +113,9 @@ const WeightValueContainer = styled.div`
 const WeightValue = styled.div`
   font-size: 48px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: baseline;
 `;
 
 const WeightUnit = styled.span`
@@ -126,66 +123,50 @@ const WeightUnit = styled.span`
   margin-left: 5px;
 `;
 
-const SliderContainer = styled.div`
+const CustomSliderContainer = styled.div`
   width: 100%;
   padding: 0 10px;
-  position: relative;
+  margin-bottom: 20px;
 `;
 
-const SliderTrack = styled.div`
-  width: 100%;
-  height: 6px;
-  background: #eee;
-  border-radius: 3px;
-  position: relative;
-`;
+// Custom styles for rc-slider
+const sliderStyles = {
+  track: {
+    backgroundColor: '#E0E0E0',
+    height: 8,
+  },
+  rail: {
+    backgroundColor: '#E0E0E0',
+    height: 8,
+  },
+  handle: {
+    borderColor: '#4CAF50',
+    backgroundColor: '#4CAF50',
+    opacity: 1,
+    height: 24,
+    width: 24,
+    marginTop: -8,
+    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+  },
+  trackTint: {
+    backgroundColor: '#4CAF50',
+    height: 8,
+  }
+};
 
-const SliderFill = styled.div`
-  position: absolute;
-  height: 100%;
-  background: #4CAF50;
-  border-radius: 3px;
-  left: 0;
-  width: ${props => props.fillWidth}%;
-`;
-
-const SliderThumb = styled.div`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #4CAF50;
-  position: absolute;
-  top: 50%;
-  left: ${props => props.position}%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-`;
-
-const SliderMarks = styled.div`
+const SliderMarksContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-top: 10px;
+  padding: 0 10px;
 `;
 
 const SliderMark = styled.div`
-  color: #aaa;
+  color: #777;
   font-size: 14px;
-  position: relative;
-  width: 1px;
-  height: 10px;
-  background: ${props => props.active ? '#4CAF50' : '#ddd'};
-  margin-top: 5px;
-  
-  &:before {
-    content: "${props => props.label}";
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-  }
+  text-align: center;
+  width: 60px;
 `;
 
 const Footer = styled.div`
@@ -208,27 +189,44 @@ const NextButton = styled.button`
   transition: background 0.2s;
 `;
 
+// Weight selector bubble animation
+const WeightBubble = styled.div`
+  position: absolute;
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: ${props => props.visible ? 1 : 0};
+  transition: opacity 0.2s;
+  pointer-events: none;
+`;
+
 const DesiredWeightScreen = () => {
   const [goal, setGoal] = useState('lose');
   const [weight, setWeight] = useState(44);
+  const [showBubble, setShowBubble] = useState(false);
   const minWeight = 40;
   const maxWeight = 120;
   const navigate = useNavigate();
 
-  const sliderRef = useRef(null);
+  const handleSliderChange = (value) => {
+    setWeight(value);
+    setShowBubble(true);
+  };
 
-  const handleSliderClick = (e) => {
-    if (sliderRef.current) {
-      const rect = sliderRef.current.getBoundingClientRect();
-      const position = (e.clientX - rect.left) / rect.width;
-      const newWeight = Math.round(minWeight + position * (maxWeight - minWeight));
-      setWeight(Math.min(Math.max(newWeight, minWeight), maxWeight));
+  useEffect(() => {
+    if (showBubble) {
+      const timer = setTimeout(() => {
+        setShowBubble(false);
+      }, 1000);
+      return () => clearTimeout(timer);
     }
-  };
-
-  const calculateThumbPosition = () => {
-    return ((weight - minWeight) / (maxWeight - minWeight)) * 100;
-  };
+  }, [showBubble]);
 
   const handleNext = () => {
     navigate('/WeightLossSpeedScreen', { state: { weightGoal: { type: goal, targetWeight: weight } } });
@@ -265,30 +263,25 @@ const DesiredWeightScreen = () => {
               {weight}<WeightUnit>kg</WeightUnit>
             </WeightValue>
 
-            <SliderContainer 
-              ref={sliderRef}
-              onClick={handleSliderClick}
-            >
-              <SliderTrack>
-                <SliderFill fillWidth={calculateThumbPosition()} />
-              </SliderTrack>
-              <SliderThumb position={calculateThumbPosition()} />
-              
-              <SliderMarks>
-                {[...Array(7)].map((_, i) => {
-                  const markValue = minWeight + (i * (maxWeight - minWeight) / 6);
-                  const isActive = weight >= markValue;
-                  
-                  return (
-                    <SliderMark 
-                      key={i} 
-                      active={isActive}
-                      label={i === 6 ? `${maxWeight} kg` : i === 0 ? `${minWeight} kg` : ''}
-                    />
-                  );
-                })}
-              </SliderMarks>
-            </SliderContainer>
+            <CustomSliderContainer>
+              <div style={{ position: 'relative' }}>
+                {showBubble && <WeightBubble visible={showBubble}>{weight} kg</WeightBubble>}
+                <Slider
+                  min={minWeight}
+                  max={maxWeight}
+                  value={weight}
+                  onChange={handleSliderChange}
+                  trackStyle={sliderStyles.trackTint}
+                  railStyle={sliderStyles.rail}
+                  handleStyle={sliderStyles.handle}
+                />
+              </div>
+            </CustomSliderContainer>
+
+            <SliderMarksContainer>
+              <SliderMark>{minWeight} kg</SliderMark>
+              <SliderMark>{maxWeight} kg</SliderMark>
+            </SliderMarksContainer>
           </WeightValueContainer>
         </WeightSelectorContainer>
       </Content>
