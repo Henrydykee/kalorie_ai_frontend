@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import classicIcon from './assets/classic.svg';
-import pesIcon from './assets/pescatarian.svg';
-import VegetarianIcon from './assets/vegetarian.svg';
-import veganIcon from './assets/vegan.svg';
+import liveHealthIcon from './assets/live_healtheir.svg';
+import boostEnergyIcon from './assets/boost_energy.svg';
+import stayConsistentIcon from './assets/stay_consitent.svg';
+import feelBetterIcon from './assets/feel_better.svg';
 
 const MobileContainer = styled.div`
   width: 375px;
@@ -125,33 +125,33 @@ const NextButton = styled.button`
   transition: background 0.2s;
 `;
 
-const DietScreen = () => {
+const AccomplishmentScreen = () => {
   const [diet, setDiet] = useState('');
   const navigate = useNavigate();
 
   const dietOptions = [
     { 
-      text: 'Classic', 
-      iconPath: classicIcon 
+      text: 'Live and eat healthier', 
+      iconPath: liveHealthIcon 
     },
     { 
-      text: 'Pescatarian', 
-      iconPath: pesIcon
+      text: 'Boost energy and mood', 
+      iconPath: boostEnergyIcon
     },
     { 
-      text: 'Vegetarian', 
-      iconPath: VegetarianIcon
+      text: 'Stay consistent', 
+      iconPath: stayConsistentIcon
     },
     { 
-      text: 'Vegan', 
-      iconPath: veganIcon
+      text: 'Feel better about my body', 
+      iconPath: feelBetterIcon
     },
   ];
 
   const handleNext = () => {
     if (diet) {
       // Navigate to next screen, passing problem in state
-      navigate('/AccomplishmentScreen', { state: { problem: diet } });
+      navigate('/GreatPotentialScreen', { state: { problem: diet } });
     }
   };
 
@@ -168,7 +168,7 @@ const DietScreen = () => {
         </LangToggle>
       </Header>
       <Content>
-        <Title>Do you follow a specific diet?</Title>
+        <Title>What would you like to accomplish?</Title>
 
         {dietOptions.map(option => (
           <Option
@@ -197,4 +197,4 @@ const DietScreen = () => {
   );
 };
 
-export default DietScreen;
+export default AccomplishmentScreen;
