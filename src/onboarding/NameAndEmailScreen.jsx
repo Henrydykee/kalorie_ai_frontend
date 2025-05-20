@@ -161,7 +161,7 @@ const NameEmailScreen = () => {
   const handleNext = () => {
     if (validateForm()) {
       // Navigate to next screen with user data
-      navigate('/next-screen', { state: { name, email } });
+      navigate('/LoadingScreen', { state: { name, email } });
     }
   };
 
